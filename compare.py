@@ -56,9 +56,14 @@ check_for_filesize = False
 # Call the function to compare the folders
 missing_files = compare_folders(folder_a, folder_b, check_for_filesize)
 
-# Create a text file with the current date and time in the name
-current_datetime = datetime.now().strftime("%Y-%m-%d_%H-%M")
-output_file = f"output/comparison_results_{current_datetime}.txt"
+# Create the output folder if it doesn't exist
+output_folder = "output"
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
+# Generate the text file path with the current date and time
+current_datetime = time.strftime("%Y%m%d_%H%M%S")
+output_file = os.path.join(output_folder, f"comparison_results_{current_datetime}.txt")
 
 with open(output_file, "w") as f:
     f.write("Files not copied:\n")
