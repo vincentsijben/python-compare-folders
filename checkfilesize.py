@@ -1,18 +1,10 @@
 import os
 import time
 
-path_limit = 260
+path_limit = 200
 folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016'
 num_files_processed = 0
 execution_time = 0.0
-
-def check_path_length(path, limit):
-    # print(f"{len(path)}: {path[4:]}")
-    if len(path) > limit:
-        return True
-    else:
-        return False
-        # print(f"{len(path)}: {path[4:]}")
 
 def compare_folders(folder1, limit):
     global num_files_processed
@@ -20,14 +12,14 @@ def compare_folders(folder1, limit):
     start_time = time.time()
     notification_interval = 10  # Notify every 10 seconds
     last_notification_time = start_time
-    print(f"\n\nThese paths inside folder {folder_a[4:]} exceed the limit of {path_limit} characters:\n")
+    print(f"\nChecking path sizes inside folder {folder_a[4:]} that exceed the limit of {path_limit} characters.")
     results = []
     for root, dirs, files in os.walk(folder1):
         for name in files + dirs:
             path = os.path.join(root, name)
-            result = check_path_length(path, limit)
-            if result:
+            if len(path) > limit:
                 results.append(path)
+
             num_files_processed += 1
             current_time = time.time()
 
@@ -49,17 +41,15 @@ def compare_folders(folder1, limit):
     output_file = os.path.join(output_folder, f"filesizes_{current_datetime}.txt")
 
     with open(output_file, 'w', encoding='utf-8') as f:
-        f.write(f"\n\nThese paths inside folder {folder_a[4:]} exceed the limit of {path_limit} characters:\n")
+        f.write(f"These paths inside folder {folder_a[4:]} exceed the limit of {path_limit} characters:\n\n")
         for path in sorted_paths:
             f.write(f"{len(path)}: {path[4:]}\n")
 
-
     end_time = time.time()
     execution_time = end_time - start_time
-    print(f"Total files processed: {num_files_processed}. Total execution time: {execution_time:.2f} seconds.")
 
 if __name__ == '__main__':
     compare_folders(folder_a, path_limit)
 
-    print(f"\nTotal files processed: {num_files_processed}.")
+    print(f"Total files processed: {num_files_processed}.")
     print(f"Total execution time: {execution_time:.2f} seconds.")
