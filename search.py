@@ -24,8 +24,17 @@ def search_files_and_folders(folder, search_string):
     print(f"Found {len(matching_results)} matches.")
     print("Execution time:", execution_time, "seconds")
 
+    # Create the output folder if it doesn't exist
+    output_folder = "output"
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Generate the text file path with the current date and time
+    current_datetime = time.strftime("%Y%m%d_%H%M%S")
+    output_file = os.path.join(output_folder, f"search_results_{current_datetime}.txt")
+
     # Save the search results to a txt file
-    with open("search_results.txt", "w", encoding='utf-8') as file:
+    with open(output_file, 'w', encoding='utf-8') as file:
         file.write("\n".join(matching_results))
 
 folder = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016'
