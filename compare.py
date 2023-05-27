@@ -1,4 +1,5 @@
 import os
+import filecmp
 import time
 from datetime import datetime
 
@@ -43,11 +44,11 @@ def compare_folders(folder_a, folder_b, check_for_filesize=False):
     return missing_files
 
 # Provide the paths of Folder A and Folder B
-folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016\1.4 - SLB POP en portfolio'
-# folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016'
+# folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016\1.4 - SLB POP en portfolio'
+folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016'
 # folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2014-2015'
-folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016\1.4 - SLB POP en portfolio'
-# folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016'
+# folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016\1.4 - SLB POP en portfolio'
+folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016'
 # folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2014-2015'
 
 # Specify whether to check for file size or not
@@ -65,11 +66,13 @@ if not os.path.exists(output_folder):
 current_datetime = time.strftime("%Y%m%d_%H%M%S")
 output_file = os.path.join(output_folder, f"comparison_results_{current_datetime}.txt")
 
-with open(output_file, "w") as f:
+with open(output_file, 'w', encoding='utf-8') as f:
     f.write("Files not copied:\n")
     if len(missing_files) > 0:
         for file in missing_files:
-            f.write(file[4:] + "\n") # Exclude the first 4 characters (\\?\)
+            display_path = file[4:]  # Exclude the first 4 characters (\\?\)
+            f.write(f"Path: {display_path} (Length: {len(file)})\n")
+            # f.write(file[4:] + "\n") # Exclude the first 4 characters (\\?\)
 
         path_lengths = [len(file) for file in missing_files]
         min_length = min(path_lengths)
