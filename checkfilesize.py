@@ -1,19 +1,65 @@
 import os
+import time
 
-path_limit = 250
+path_limit = 260
 folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016'
+num_files_processed = 0
+execution_time = 0.0
 
 def check_path_length(path, limit):
+    # print(f"{len(path)}: {path[4:]}")
     if len(path) > limit:
-        
-        print(f"{len(path)}: {path[4:]}")
+        return True
+    else:
+        return False
+        # print(f"{len(path)}: {path[4:]}")
 
 def compare_folders(folder1, limit):
-    print(f"\n\nThese paths exceed the limit of {path_limit} characters:\n")
+    global num_files_processed
+    global execution_time
+    start_time = time.time()
+    notification_interval = 10  # Notify every 10 seconds
+    last_notification_time = start_time
+    print(f"\n\nThese paths inside folder {folder_a[4:]} exceed the limit of {path_limit} characters:\n")
+    results = []
     for root, dirs, files in os.walk(folder1):
         for name in files + dirs:
             path = os.path.join(root, name)
-            check_path_length(path, limit)
+            result = check_path_length(path, limit)
+            if result:
+                results.append(path)
+            num_files_processed += 1
+            current_time = time.time()
+
+             # Check if it's time for a progress notification
+            if current_time - last_notification_time >= notification_interval:
+                elapsed_time = current_time - start_time
+                print(f"Processed {num_files_processed} files. Elapsed time: {elapsed_time:.2f} seconds.")
+                last_notification_time = current_time
+
+    sorted_paths = sorted(results, key=len, reverse=True)
+
+    # Create the output folder if it doesn't exist
+    output_folder = "output"
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Generate the text file path with the current date and time
+    current_datetime = time.strftime("%Y%m%d_%H%M%S")
+    output_file = os.path.join(output_folder, f"filesizes_{current_datetime}.txt")
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(f"\n\nThese paths inside folder {folder_a[4:]} exceed the limit of {path_limit} characters:\n")
+        for path in sorted_paths:
+            f.write(f"{len(path)}: {path[4:]}\n")
+
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Total files processed: {num_files_processed}. Total execution time: {execution_time:.2f} seconds.")
 
 if __name__ == '__main__':
     compare_folders(folder_a, path_limit)
+
+    print(f"\nTotal files processed: {num_files_processed}.")
+    print(f"Total execution time: {execution_time:.2f} seconds.")
