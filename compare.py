@@ -6,6 +6,17 @@ from datetime import datetime
 num_files_processed = 0
 execution_time = 0.0
 
+# Provide the paths of Folder A and Folder B
+# folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016\1.4 - SLB POP en portfolio'
+folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016'
+# folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2014-2015'
+# folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016\1.4 - SLB POP en portfolio'
+folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016'
+# folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2014-2015'
+
+# Specify whether to check for file size or not
+check_for_filesize = False
+
 def compare_folders(folder_a, folder_b, check_for_filesize=False):
     global num_files_processed
     global execution_time
@@ -43,16 +54,7 @@ def compare_folders(folder_a, folder_b, check_for_filesize=False):
 
     return missing_files
 
-# Provide the paths of Folder A and Folder B
-# folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016\1.4 - SLB POP en portfolio'
-folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2015-2016'
-# folder_a = r'\\?\E:\Dropbox (ArtsZuyd)\mamdt - onderwijsinhoud - CMD onderwijs 2014-2015'
-# folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016\1.4 - SLB POP en portfolio'
-folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2015-2016'
-# folder_b = r'\\?\E:\Zuyd Hogeschool\CMD - Z_Archief onderwijs\2014-2015'
 
-# Specify whether to check for file size or not
-check_for_filesize = False
 
 # Call the function to compare the folders
 missing_files = compare_folders(folder_a, folder_b, check_for_filesize)
@@ -72,7 +74,6 @@ with open(output_file, 'w', encoding='utf-8') as f:
         for file in missing_files:
             display_path = file[4:]  # Exclude the first 4 characters (\\?\)
             f.write(f"Path: {display_path} (Length: {len(file)})\n")
-            # f.write(file[4:] + "\n") # Exclude the first 4 characters (\\?\)
 
         path_lengths = [len(file) for file in missing_files]
         min_length = min(path_lengths)
